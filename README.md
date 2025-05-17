@@ -26,12 +26,14 @@ class GameSprite(pygame.sprite.Sprite):
         win.blit(self.image, (x,y))
 
     def moving_right(self):
+        global X
         X -= 5
 
     def moving_left(self):
+        global X
         X += 5
 
-class Player(self):
+class Player(GameSprite):
     def update(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT]:
@@ -40,13 +42,12 @@ class Player(self):
             self.rect.x -= 5
 
 objects = list()
-scense = GameSprite('wood3.jpg', 0, 0, 4000, 700, 0)
+scense = GameSprite('wood.jpg', 0, 0, 4000, 700, 0)
 objects.appened(scene)
 hero = Player('hero.png', 250, 420, 70, 120, 5)
 
 game = True
 finish = False
-
 while game:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -82,6 +83,13 @@ while game:
 
         for objects in objects:
             objects.recet(X,Y)
+
+        hero.update()
+        hero.reset(X + hero.rect.x, Y)
+
+        pygame.display.update()
+        clock.tick(FPS)
+
 
         hero.update()
         hero.reset(X + hero.rect.x)
