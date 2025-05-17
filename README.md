@@ -45,6 +45,11 @@ objects = list()
 scense = GameSprite('wood.jpg', 0, 0, 4000, 700, 0)
 objects.appened(scene)
 hero = Player('hero.png', 250, 420, 70, 120, 5)
+enemy_1 = GameSprite('bad_boy.png', 1000, 420, 85, 135)
+objects.appened(enemy_1)
+enemy_2 = GameSprite('bad_boy.png', 2000, 300, 90, 135)
+objects.appened(enemy_2)
+
 
 game = True
 finish = False
@@ -82,14 +87,10 @@ while game:
             pass
 
         for objects in objects:
-            objects.recet(X,Y)
+            objects.recet(X + object.rect.x,Y + object.rect.y)
 
         hero.update()
-        hero.reset(X + hero.rect.x, Y)
+        hero.reset(X + hero.rect.x, hero.rect.y)
 
         pygame.display.update()
         clock.tick(FPS)
-
-
-        hero.update()
-        hero.reset(X + hero.rect.x)
