@@ -1,96 +1,90 @@
-import pygame 
+import pygame
 
 win_width = 900
 win_height = 700
 FPS = 60
 move_right = False
 move_left = False
-view_right = True 
+view_right = True
+x_fon = 0
 
-X, Y = 0, 0
-global X, Y
-
-win = pygame.display.set_mode((win_width, win_height))
-pygame.display.set_caption("А Р К А Д А")
+win = pygame.display.set_mode((win_width,win_height))
+pygame.display.set_caption('АРКАДА')
 clock = pygame.time.Clock()
 
 class GameSprite(pygame.sprite.Sprite):
-    def __init__(self, img_pic, img_x, img_y, img_width, img_height, img_speed)
-        self.image = pygame.image.load(img_pic)
-        self.image = pygame.transform.scale(self.image, (img_width, img_height))
+    def __init__(self, img_pic, img_x, img_y, img_width, img_height, img_speed):
+        self.image = pygame.transform.scale(pygame.image.load(img_pic), (img_width, img_height))
         self.rect = self.image.get_rect()
         self.rect.x = img_x
         self.rect.y = img_y
+        self.speed = img_speed
 
-    def reset(self, x, y):
-        win.blit(self.image, (x,y))
+    def reset(self):
+        win.blit(self.image, (self.rect.x, self.rect.y))
 
-    def moving_right(self):
-        global X
-        X -= 5
-
-    def moving_left(self):
-        global X
-        X += 5
-
+    def right(self):
+        #global x_fon
+        self.rect.x -= 5  
+        
+    def left(self):
+        #global x_fon
+        self.rect.x += 5  
+            
 class Player(GameSprite):
-    def update(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_RIGHT]:
-            self.rect.x += 5
-        if keys[pygame.K_LEFT]:
-            self.rect.x -= 5
-
-objects = list()
-scense = GameSprite('wood.jpg', 0, 0, 4000, 700, 0)
-objects.appened(scene)
+    def right(self):
+        self.rect.x += 5
+    def left(self):
+        self.rect.x -= 5
+        
+scene = GameSprite('wood3.jpg', 0, 0, 4000, 700, 0)
 hero = Player('hero.png', 250, 420, 70, 120, 5)
-enemy_1 = GameSprite('bad_boy.png', 1000, 420, 85, 135)
-objects.appened(enemy_1)
-enemy_2 = GameSprite('bad_boy.png', 2000, 300, 90, 135)
-objects.appened(enemy_2)
-
 
 game = True
 finish = False
+
 while game:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+    for e in pygame.event.get():
+        if e.type == pygame.QUIT:
             game = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
+        if e.type == pygame.KEYDOWN:
+            if e.key == pygame.K_RIGHT:
                 if not view_right:
                     hero.image = pygame.transform.flip(hero.image, True, False)
-                    view_right = False
-                move_right = True
-            if event.key == pygame.K_LEFT:
+                    view_right = True
+                move_right = True  
+            if e.key == pygame.K_LEFT:
                 if view_right:
                     hero.image = pygame.transform.flip(hero.image, True, False)
-                    view_right = True
-                move_right = True
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_RIGHT:
-                    move_right = False
-                if event.key == pygame.K_LEFT:
-                    move_left = False
+                    view_right = False      
+                move_left = True
+        if e.type == pygame.KEYUP:
+            if e.key == pygame.K_RIGHT:
+                move_right = False  
+            if e.key == pygame.K_LEFT:
+                move_left = False
+            
+    if move_right:
+        if x_fon < 3680:
+            x_fon += 5
+            if x_fon >= 0 and x_fon <= 3100:
+                scene.right()
+            if x_fon < 0 or x_fon > 3100:
+                hero.right()
+    
+    if move_left:
+        if x_fon > -240:
+            x_fon -= 5
+            if x_fon >= 0 and x_fon <= 3100:
+                scene.left()
+            if x_fon < 0 or x_fon > 3100:
+                hero.left()
+    
+    scene.reset()
+    hero.reset()
 
-        if move_right and X > -3100:
-            for objects in objects:
-                objects.moving_right()
-        else:
-            pass
-
-        if move_rleft and X < 0:
-            for objects in objects:
-                objects.moving_left()
-        else:
-            pass
-
-        for objects in objects:
-            objects.recet(X + object.rect.x,Y + object.rect.y)
-
-        hero.update()
-        hero.reset(X + hero.rect.x, hero.rect.y)
+    pygame.display.update()
+    clock.tick(FPS)
 
         pygame.display.update()
         clock.tick(FPS)
