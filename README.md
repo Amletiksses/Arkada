@@ -5,6 +5,7 @@ win_height = 700
 FPS = 60
 move_right = False
 move_left = False
+move_up = False
 view_right = True
 x_fon = 0
 
@@ -36,9 +37,25 @@ class Player(GameSprite):
         self.rect.x += 5
     def left(self):
         self.rect.x -= 5
-        
-scene = GameSprite('wood.jpg', 0, 0, 4000, 700, 0)
+
 hero = Player('hero.png', 250, 420, 70, 120, 5)
+objects = []        
+scene = GameSprite('wood.jpg', 0, 0, 4000, 700, 0)
+enemy_1 =  GameSprite('bad_boy.png', 800, 410, 80, 135, 0)
+enemy_2 =  GameSprite('bad_boy.png', 1800, 180, 80, 135, 0)
+enemy_3 =  GameSprite('bad_boy.png', 3100, 410, 80, 135, 0)
+girl = GameSprite('girl.png', 3400, 410, 80, 130, 0)
+platforma1 = GameSprite('wall.png', 600, 300, 400, 100, 0)
+platforma2 = GameSprite('wall.png', 1600, 300, 400, 100, 0)
+stair1 = GameSprite('stair.png', 540, 250, 80, 310, 0)
+objects.append(scene)
+objects.append(stair1)
+objects.append(platforma1)
+objects.append(platforma2)
+objects.append(enemy_1)
+objects.append(enemy_2)
+objects.append(enemy_3)
+objects.append(girl)
 
 game = True
 finish = False
@@ -58,6 +75,9 @@ while game:
                     hero.image = pygame.transform.flip(hero.image, True, False)
                     view_right = False      
                 move_left = True
+            if e.key == pygame.K_UP:
+                move_up = True 
+
         if e.type == pygame.KEYUP:
             if e.key == pygame.K_RIGHT:
                 move_right = False  
@@ -68,7 +88,8 @@ while game:
         if x_fon < 3680:
             x_fon += 5
             if x_fon >= 0 and x_fon <= 3100:
-                scene.right()
+                for el in objects:
+                    el.right()
             if x_fon < 0 or x_fon > 3100:
                 hero.right()
     
@@ -76,15 +97,25 @@ while game:
         if x_fon > -240:
             x_fon -= 5
             if x_fon >= 0 and x_fon <= 3100:
-                scene.left()
+                for el in objects:
+                    el.left()
             if x_fon < 0 or x_fon > 3100:
                 hero.left()
-    
-    scene.reset()
+    if move_up:
+        if pygame.sprite.collide_rect(hero, stair1):
+                if hero.rect.y -= 5
+            else:
+                if hero.rect.y < 420:
+        if not pygame.sprite.collide_rect(hero, platforma1) or pygame.sprite.collide_rect(hero, platforma2):
+            hero.rect.y += 5
+
+
+
+    for el in objects:
+        el.reset()
     hero.reset()
 
     pygame.display.update()
     clock.tick(FPS)
-
         pygame.display.update()
         clock.tick(FPS)
