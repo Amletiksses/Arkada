@@ -37,7 +37,7 @@ class Player(GameSprite):
     def left(self):
         self.rect.x -= 5
         
-scene = GameSprite('wood3.jpg', 0, 0, 4000, 700, 0)
+scene = GameSprite('wood.jpg', 0, 0, 4000, 700, 0)
 hero = Player('hero.png', 250, 420, 70, 120, 5)
 
 game = True
